@@ -1,8 +1,8 @@
 var path = require("path"),
-    fs = require("fs"),
-    futil = require("./lib/util"),
-    ns = require("./lib/ns"),
-    existsSync = fs.existsSync || path.existsSync;
+  fs = require("fs"),
+  futil = require("./lib/util"),
+  ns = require("./lib/ns"),
+  existsSync = fs.existsSync || path.existsSync;
 
 /*
 
@@ -25,18 +25,18 @@ exports.init = function(_options, cb) {
   _options = _options || {};
 
   var appDir = _options.appDir || process.cwd(),
-      defaultConfFile = _options.defaultConfigPath || null,
-      appConfFile = _options.appConfigPath || (appDir + "/config.json"),
-      defaultOptions = {},
-      appOptions = null,
-      _breadcrumb = [];
+    defaultConfFile = _options.defaultConfigPath || null,
+    appConfFile = _options.appConfigPath || (appDir + "/config.json"),
+    defaultOptions = {},
+    appOptions = null,
+    _breadcrumb = [];
 
   if (defaultConfFile && existsSync(defaultConfFile)) {
     defaultOptions = JSON.parse(fs.readFileSync(defaultConfFile, "utf-8"));
     _breadcrumb.push("Default options from " + defaultConfFile);
   }
 
-  if (_options.defaultOptionsHook && typeof (_options.defaultOptionsHook) === "function") {
+  if (_options.defaultOptionsHook && typeof(_options.defaultOptionsHook) === "function") {
     _options.defaultOptionsHook(defaultOptions);
     _breadcrumb.push("Default hook used");
   }
@@ -57,15 +57,15 @@ exports.init = function(_options, cb) {
   }
 
   var cmdLineOptions = {},
-      i,
-      argIndex = process.argv.indexOf(process.mainModule.filename) + 1;
+    i,
+    argIndex = process.argv.indexOf(process.mainModule.filename) + 1;
   var cmdArgs = argIndex < process.argv.length ? process.argv.slice(argIndex) : process.argv,
-      usingCmdArgs = false;;
+    usingCmdArgs = false;;
 
   // have to handle the environment selection up front.
   for (i = 0; i < cmdArgs.length; i++) {
-    if (cmdArgs[i] === "env" && i < cmdArgs.length-1) {
-      mergedOptions.useEnv = cmdArgs[i+1];
+    if (cmdArgs[i] === "env" && i < cmdArgs.length - 1) {
+      mergedOptions.useEnv = cmdArgs[i + 1];
       break;
     }
   }
@@ -83,7 +83,7 @@ exports.init = function(_options, cb) {
     } else if (existsSync(appDir + "/conf/" + mergedOptions.useEnv + ".json")) { // See if there is a conf folder with a json file with that env name.
       //console.info("\nUsing " + mergedOptions.useEnv + " environment from external file.");
       var filename = appDir + "/conf/" + mergedOptions.useEnv + ".json",
-          envOptions = JSON.parse(fs.readFileSync(filename, "utf-8"));
+        envOptions = JSON.parse(fs.readFileSync(filename, "utf-8"));
       mergedOptions = futil.recursiveExtend(mergedOptions, envOptions);
       delete mergedOptions.environments;
       _breadcrumb.push("Environment options from " + filename);
@@ -114,9 +114,9 @@ exports.init = function(_options, cb) {
       return ns(path, this, true);
     };
     mergedOptions.dumpBuildInfo = function() {
-      return _breadcrumb;
-    }
-    // Finally, call back with the resulting options object.
+        return _breadcrumb;
+      }
+      // Finally, call back with the resulting options object.
     cb(null, mergedOptions);
   }
 };
